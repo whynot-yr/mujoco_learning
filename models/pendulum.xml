@@ -1,0 +1,82 @@
+<mujoco model="pendulum">
+    <!--
+        v0.3 学习目标：
+        1. 理解 body 的层级关系
+        2. 理解 hinge joint 的旋转轴 axis
+        3. 理解 qpos / qvel 中的关节角度和角速度
+        4. 观察 damping / armature / limited / range 的作用
+    -->
+
+    <compiler angle="degree"/>
+    <option timestep="0.002" gravity="0 0 -9.81"/>
+
+    <worldbody>
+        <light name="top_light" pos="0 0 4"/>
+
+        <geom
+            name="floor"
+            type="plane"
+            size="3 3 0.1"
+            rgba="0.85 0.85 0.85 1"
+        />
+
+        <!-- 固定支架，只是可视化用，没有自由度 -->
+        <body name="support" pos="0 0 1.2">
+            <geom
+                name="support_vertical"
+                type="box"
+                pos="0 0 -0.35"
+                size="0.04 0.04 0.35"
+                rgba="0.2 0.2 0.2 1"
+                contype="0"
+                conaffinity="0"
+            />
+            <geom
+                name="support_horizontal"
+                type="box"
+                pos="0 0 0"
+                size="0.18 0.04 0.04"
+                rgba="0.2 0.2 0.2 1"
+                contype="0"
+                conaffinity="0"
+            />
+        </body>
+
+        <!-- 摆体：这个 body 通过 hinge joint 挂在世界上 -->
+        <body name="pendulum" pos="0 0 1.2">
+            <joint
+                name="pendulum_hinge"
+                type="hinge"
+                axis="0 1 0"
+                damping="0.05"
+                armature="0.01"
+                limited="true"
+                range="-120 120"
+            />
+
+            <geom
+                name="rod_geom"
+                type="capsule"
+                fromto="0 0 0 0 0 -0.6"
+                size="0.03"
+                mass="0.08"
+                rgba="0.1 0.5 0.9 1"
+            />
+
+            <body name="bob" pos="0 0 -0.6">
+                <geom
+                    name="bob_geom"
+                    type="sphere"
+                    size="0.08"
+                    mass="0.12"
+                    rgba="0.9 0.3 0.2 1"
+                />
+            </body>
+        </body>
+    </worldbody>
+
+    <!-- 这里存一个 30 度的参考姿态，便于学习“初始角度”的含义 -->
+    <keyframe>
+        <key name="tilted_start" qpos="30"/>
+    </keyframe>
+</mujoco>

@@ -18,7 +18,7 @@
                 type="sphere"
                 size="0.1"
                 mass="1"
-                rgba="1 0 0 1"
+                rgba="1 0 1 0.7"
             />
         </body>
     </worldbody>
